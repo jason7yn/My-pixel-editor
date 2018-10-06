@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Graphics;
 public class mainFrame extends JFrame {
+	private DrawListener dl;
+	private Graphics g;
 	public static void main(String args[]) {
 		mainFrame mf = new mainFrame();
 		mf.initUI();
@@ -25,14 +28,17 @@ public class mainFrame extends JFrame {
 					"Cut","Crop","Text"};
 		JPanel toolPanel = new JPanel(new GridLayout(9,1,10,10));
 		toolPanel.setPreferredSize(new Dimension(100,800));
+		dl=new DrawListener();
 		for(int i=0;i<buttonName.length;i++) {
 			JButton jbutton= new JButton(buttonName[i]);
+			jbutton.addActionListener(dl);
 			toolPanel.add(jbutton);
+			
 		}
 		//create drawboar
-				JPanel drawBoard = new JPanel();
-				drawBoard.setPreferredSize(new Dimension(970,800));
-				drawBoard.setBackground(Color.WHITE);
+		JPanel drawBoard = new JPanel();
+		drawBoard.setPreferredSize(new Dimension(970,800));
+		drawBoard.setBackground(Color.WHITE);
 		
 		//create color board
 		Color[] colorArray= { Color.BLUE, Color.GREEN, Color.RED, 
@@ -42,8 +48,10 @@ public class mainFrame extends JFrame {
 		JPanel colorBoard = new JPanel(new GridLayout(1,colorArray.length,3,3));
 		for(int i=0;i<colorArray.length;i++) {
 			JButton button = new JButton();
+			button.addActionListener(dl);
 			button.setBackground(colorArray[i]);
 			button.setPreferredSize(new Dimension(30,30));
+			
 			colorBoard.add(button);
 		}
 		this.add(toolPanel);
@@ -54,6 +62,11 @@ public class mainFrame extends JFrame {
 		currentColor.setBackground(Color.BLACK);
 		add(currentColor);
 		setVisible(true);
+		g=this.getGraphics();
+		dl.setG(g);
+		dl.setCurrentColor(currentColor);
+		this.addMouseListener(dl);
+		this.addMouseMotionListener(dl);
 		
 		
 	}
